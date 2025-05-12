@@ -1,33 +1,32 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 
 const app = express();
-const PORT = process.env.PORT || 4001;
+const port = process.env.PORT || 4001;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Database would be initialized here in a real app
-
 // Routes
-app.get('/', (_req: Request, res: Response) => {
-  res.send('Auth Service is running!');
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'healthy', service: 'auth-service' });
 });
 
-app.post('/register', (req: Request, res: Response) => {
-  // Registration logic would go here
-  res.json({ message: 'Registration endpoint (not implemented yet)' });
+app.post('/register', (req, res) => {
+  // In a real implementation, this would create a user in the database
+  res.status(201).json({ message: 'User registration placeholder' });
 });
 
-app.post('/login', (req: Request, res: Response) => {
-  // Login logic would go here
-  res.json({ message: 'Login endpoint (not implemented yet)' });
+app.post('/login', (req, res) => {
+  // In a real implementation, this would authenticate a user
+  res.json({
+    message: 'Login successful placeholder',
+    token: 'sample-jwt-token',
+  });
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Auth Service running on port ${PORT}`);
+// Start server
+app.listen(port, () => {
+  console.log(`Auth Service running on port ${port}`);
 });
