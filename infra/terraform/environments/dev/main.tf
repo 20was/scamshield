@@ -30,3 +30,31 @@ module "network" {
   # availability_zones   = ["us-east-1a", "us-east-1b"]
 }
 
+# Import existing code here, and add:
+
+module "container" {
+  source        = "../../modules/container"
+  project_name  = var.project_name
+  environment   = var.environment
+}
+
+# Add outputs to expose repository URLs
+output "frontend_repository_url" {
+  description = "URL for the frontend ECR repository"
+  value       = module.container.frontend_repository_url
+}
+
+output "api_gateway_repository_url" {
+  description = "URL for the API gateway ECR repository"
+  value       = module.container.api_gateway_repository_url
+}
+
+output "auth_service_repository_url" {
+  description = "URL for the auth service ECR repository"
+  value       = module.container.auth_service_repository_url
+}
+
+output "reporting_service_repository_url" {
+  description = "URL for the reporting service ECR repository"
+  value       = module.container.reporting_service_repository_url
+}
