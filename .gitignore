@@ -55,6 +55,12 @@ docker-compose.override.yml
 *.swp
 *.swo
 
+# Cursor
+.cursor/
+.cursor-cache/
+.cursor-settings.json
+.cursor-history.json
+
 # AWS
 .aws/
 .terraform/
