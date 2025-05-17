@@ -152,10 +152,7 @@ jobs:
       # Step 7: Build and test the Docker Compose setup
       - name: Build and test Docker Compose
         run: |
-          # Build the base image first
-          docker build -t scamshield-base:dev -f base.Dockerfile .
-
-          # Build the Docker images
+          # Build all services at once
           docker-compose build
 
           # Start the Docker containers in detached mode

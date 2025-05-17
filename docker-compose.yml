@@ -17,8 +17,8 @@ services:
   # Frontend service - React application
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: frontend/Dockerfile.dev
     ports:
       - '3000:3000'
     volumes:
@@ -26,7 +26,7 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - WATCHPACK_POLLING=true
+      - PORT=3000
       - NEXT_TELEMETRY_DISABLED=1
     depends_on:
       - api-gateway
@@ -34,8 +34,8 @@ services:
   # API Gateway service
   api-gateway:
     build:
-      context: ./services/api-gateway
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: services/api-gateway/Dockerfile.dev
     ports:
       - '4000:4000'
     volumes:
@@ -43,7 +43,7 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - WATCHPACK_POLLING=true
+      - PORT=4000
     depends_on:
       - auth-service
       - reporting-service
@@ -51,8 +51,8 @@ services:
   # Authentication service
   auth-service:
     build:
-      context: ./services/auth-service
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: services/auth-service/Dockerfile.dev
     ports:
       - '4001:4001'
     volumes:
@@ -60,15 +60,13 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - WATCHPACK_POLLING=true
-    depends_on:
-      - postgres
+      - PORT=4001
 
   # Reporting service
   reporting-service:
     build:
-      context: ./services/reporting-service
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: services/reporting-service/Dockerfile.dev
     ports:
       - '4002:4002'
     volumes:
@@ -76,9 +74,7 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - WATCHPACK_POLLING=true
-    depends_on:
-      - postgres
+      - PORT=4002
 
   # PostgreSQL Database
   postgres:
