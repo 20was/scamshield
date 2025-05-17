@@ -152,7 +152,10 @@ jobs:
       # Step 7: Build and test the Docker Compose setup
       - name: Build and test Docker Compose
         run: |
-          # Build all services at once
+          # Build the base image first
+          docker-compose build base
+
+          # Build all other services
           docker-compose build
 
           # Start the Docker containers in detached mode

@@ -9,7 +9,7 @@ services:
   base:
     build:
       context: .
-      dockerfile: services/Dockerfile.base
+      dockerfile: base.Dockerfile
     image: scamshield-base:dev
     profiles:
       - build-only
