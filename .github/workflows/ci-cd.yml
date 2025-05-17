@@ -129,6 +129,9 @@ jobs:
       # Step 4: Build and test the Docker Compose setup
       - name: Build and test Docker Compose
         run: |
+          # Build the base image first
+          docker build -t scamshield-base:dev -f base.Dockerfile .
+
           # Build the Docker images
           docker-compose build
 
