@@ -1,19 +1,25 @@
-FROM node:20-alpine
+FROM scamshield-base:dev
 
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy package files
+COPY package.json ./
 
 # Install dependencies
-RUN npm install
+RUN pnpm install
 
-# Copy the rest of the code
+# Copy source code
 COPY . .
 
 # Expose port 4000
 EXPOSE 4000
 
+# Set the port for this service
+ENV PORT=4000
+
 # Start the development server
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "run", "dev"]
 

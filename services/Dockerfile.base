@@ -1,0 +1,26 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install pnpm
+RUN npm install -g pnpm@10.11.0
+
+# Copy workspace configuration
+COPY pnpm-workspace.yaml ./
+COPY package.json ./
+COPY .npmrc ./
+
+# Copy all service package.json files
+COPY services/*/package.json ./services/
+
+# Install dependencies
+RUN pnpm install
+
+# Copy source code
+COPY . .
+
+# The port will be overridden by each service
+EXPOSE ${PORT}
+
+# Start the development server
+CMD ["pnpm", "run", "dev"] 

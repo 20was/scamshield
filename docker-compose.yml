@@ -5,85 +5,92 @@
 version: '3.8'
 
 services:
+  # Base image for all services
+  base:
+    build:
+      context: .
+      dockerfile: services/Dockerfile.base
+    image: scamshield-base:dev
+    profiles:
+      - build-only
+
   # Frontend service - React application
-  # This is the user interface that users interact with
   frontend:
     build:
-      context: ./frontend # Location of the frontend code
-      dockerfile: Dockerfile.dev # Development-specific Dockerfile
+      context: ./frontend
+      dockerfile: Dockerfile.dev
     ports:
-      - '3000:3000' # Maps container port 3000 to host port 3000
+      - '3000:3000'
     volumes:
-      - ./frontend:/app # Mounts frontend code for live development
-      - /app/node_modules # Preserves node_modules in container
+      - ./frontend:/app
+      - /app/node_modules
     environment:
-      - NODE_ENV=development # Sets development environment
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+      - NEXT_TELEMETRY_DISABLED=1
     depends_on:
-      - api-gateway # Ensures API gateway starts first
+      - api-gateway
 
-  # API Gateway service - Main entry point for all API requests
-  # Acts as a single point of entry for all client requests
+  # API Gateway service
   api-gateway:
     build:
       context: ./services/api-gateway
       dockerfile: Dockerfile.dev
     ports:
-      - '4000:4000' # API Gateway runs on port 4000
+      - '4000:4000'
     volumes:
       - ./services/api-gateway:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
+      - WATCHPACK_POLLING=true
     depends_on:
-      - auth-service # Needs auth service for authentication
-      - reporting-service # Needs reporting service for reports
+      - auth-service
+      - reporting-service
 
-  # Authentication service - Handles user authentication and authorization
-  # Manages user login, registration, and session management
+  # Authentication service
   auth-service:
     build:
       context: ./services/auth-service
       dockerfile: Dockerfile.dev
     ports:
-      - '4001:4001' # Auth service runs on port 4001
+      - '4001:4001'
     volumes:
       - ./services/auth-service:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
+      - WATCHPACK_POLLING=true
     depends_on:
-      - postgres # Needs database for user data
+      - postgres
 
-  # Reporting service - Handles scam reports and analytics
-  # Processes and stores reports about potential scams
+  # Reporting service
   reporting-service:
     build:
       context: ./services/reporting-service
       dockerfile: Dockerfile.dev
     ports:
-      - '4002:4002' # Reporting service runs on port 4002
+      - '4002:4002'
     volumes:
       - ./services/reporting-service:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
+      - WATCHPACK_POLLING=true
     depends_on:
-      - postgres # Needs database for report storage
+      - postgres
 
-  # PostgreSQL Database - Stores all application data
-  # Uses official PostgreSQL 16 image
+  # PostgreSQL Database
   postgres:
-    image: postgres:16 # Uses PostgreSQL version 16
+    image: postgres:16
     ports:
-      - '5432:5432' # Standard PostgreSQL port
+      - '5432:5432'
     environment:
-      - POSTGRES_USER=postgres # Database username
-      - POSTGRES_PASSWORD=postgres # Database password
-      - POSTGRES_DB=scamshield # Database name
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=scamshield
     volumes:
-      - postgres-data:/var/lib/postgresql/data # Persists database data
+      - postgres-data:/var/lib/postgresql/data
 
-# Define named volumes for data persistence
-# This ensures data survives container restarts
 volumes:
-  postgres-data: # Named volume for PostgreSQL data
+  postgres-data:

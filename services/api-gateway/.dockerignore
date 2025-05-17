@@ -1,0 +1,25 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+dist
+build
+.next
+
+# Environment files
+.env
+.env.*
+
+# Development files
+.git
+.gitignore
+README.md
+*.log
+.DS_Store
+
+# IDE files
+.idea
+.vscode
+*.swp
+*.swo 
