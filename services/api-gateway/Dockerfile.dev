@@ -2,17 +2,8 @@ FROM scamshield-base:dev
 
 WORKDIR /app
 
-# Install pnpm
-RUN npm install -g pnpm
-
-# Copy package files
-COPY package.json ./
-
-# Install dependencies
-RUN pnpm install
-
 # Copy source code
-COPY . .
+COPY services/api-gateway/ .
 
 # Expose port 4000
 EXPOSE 4000
