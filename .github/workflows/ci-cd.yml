@@ -126,7 +126,30 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
-      # Step 4: Build and test the Docker Compose setup
+      # Step 4: Setup pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.11.0
+          run_install: false
+
+      # Step 5: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      # Step 6: Update lock file
+      - name: Update lock file
+        run: |
+          pnpm install
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add pnpm-lock.yaml
+          git commit -m "chore: update pnpm-lock.yaml" || true
+
+      # Step 7: Build and test the Docker Compose setup
       - name: Build and test Docker Compose
         run: |
           # Build the base image first
